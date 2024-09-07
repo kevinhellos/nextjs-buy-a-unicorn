@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ui-product-card {
+  @apply
+  border px-10 py-8 rounded-xl max-w-md mx-auto mt-[20vh]
+}
+
+.ui-product-name {
+  @apply
+  text-xl font-medium text-black mt-3
+}
+
+.ui-product-description {
+  @apply
+  text-sm text-black mb-3
+}
+
+.ui-price {
+  @apply
+  bg-gray-100 w-fit px-2 rounded-md py-1 mt-2 mb-3
+}
+
+.ui-labels-group {
+  @apply
+  flex gap-2 lg:gap-3
+}
+
+.ui-label {
+  @apply
+  border border-gray-200 text-xs px-2 py-1 rounded-md hover:bg-gray-50 cursor-pointer text-gray-600
+}
+
+.ui-button {
+  @apply
+  text-sm bg-black hover:opacity-85 active:opacity-65 text-white py-3 px-3 rounded-md w-full 
+  disabled:bg-gray-400 disabled:cursor-not-allowed
+}
+.ui-button-outline {
+  @apply
+  text-sm border border-black hover:opacity-85 active:opacity-65 text-black py-3 px-3 rounded-md w-full
+  hover:bg-gray-50
+}
