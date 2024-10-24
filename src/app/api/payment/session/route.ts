@@ -8,10 +8,7 @@ export async function POST(request: Request) {
   
     // Ensure sessionId exists first
     if (!sessionId) {
-      return NextResponse.json(
-        { error: "Error 106: session_id is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Error 106: session_id is required" }, { status: 400 });
     }
   
     try {
@@ -27,9 +24,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ session, lineItems }, { status: 200 });
     } 
     catch (err: any) {
-      return NextResponse.json(
-        { error: err.message || "Internal Server Error"},
-        { status: 500 }
-      );
+      return NextResponse.json({ error: err.message || "Internal Server Error"}, { status: 500 });
     }
   }

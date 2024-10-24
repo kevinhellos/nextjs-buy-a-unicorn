@@ -1,5 +1,6 @@
 "use client";
 
+import TestModeBar from "@/components/TestModeBar";
 import { productData } from "@/productData";
 import { ShoppingBag } from "lucide-react";
 import { useState } from "react";
@@ -12,6 +13,7 @@ export default function page() {
     setBuyButtonLoading(true);
     
     try {
+
       // Create a Stripe checkout session
       fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/checkout`, {
         method: "POST",
@@ -33,16 +35,11 @@ export default function page() {
 
   return (
     <>
-      {productData.isTestMode && (
-        <div className="bg-yellow-300 text-sm py-2">
-          <p className="text-center font-normal">
-            {productData?.textModeMessage ? productData?.textModeMessage : "This product is currently in test mode"}
-          </p>
-        </div>
-      )}
+
+      {productData.isTestMode && <TestModeBar/>}
 
       <div className="ui-product-card">
-        <ShoppingBag className="mt-1" size={30}/>
+        <ShoppingBag className="mt-1" strokeWidth={1.35} size={45}/>
 
         <h1 className="ui-product-name">Buy a {productData.name}</h1>
         <h2 className="ui-price">${productData.price}</h2>

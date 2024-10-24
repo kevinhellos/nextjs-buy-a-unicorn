@@ -8,22 +8,19 @@ export async function POST(request: Request) {
   
     // Ensure payment_id exists first
     if (!paymentId) {
-      return NextResponse.json(
-        { error: "Error 106: payment_id is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Error 106: payment_id is required" }, { status: 400 });
     }
   
     try {
-        const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
-        if (paymentIntent) {
-          return NextResponse.json({ paymentIntent }, { status: 200 });
-        } 
-        else {
-          return NextResponse.json({ errorMessage: "Payment Id not found" }, { status: 500 });
-        }
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
+      if (paymentIntent) {
+        return NextResponse.json({ paymentIntent }, { status: 200 });
+      } 
+      else {
+        return NextResponse.json({ errorMessage: "Payment Id not found" }, { status: 500 });
+      }
     } 
-    catch (error) {
+    catch (error: any) {
       console.log(error);
       return NextResponse.json({ errorMessage: "Internal server error" }, { status: 500 });
     }

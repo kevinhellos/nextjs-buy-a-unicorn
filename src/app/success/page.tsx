@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleCheck, Info, ShoppingBag } from "lucide-react";
+import { CircleX } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -10,17 +10,17 @@ export default function page() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
-  const [customerName, setCustomerName] = useState("");
-  const [paymentIntentId, setPaymentIntentId] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [errorMessage, setErrorMessage] = useState("");
+  async function getPaymentDetails() {
 
-  function getPaymentDetails() {
-
-    // If sessionId exists
+    // Ensure sessionId exists
     if (sessionId) {
+
+      // Post the sessionId to receive paymentData object
       try {
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/session`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/session`, {
           method: "POST",
           body: JSON.stringify({
             session_id: sessionId,
@@ -29,26 +29,30 @@ export default function page() {
             "Content-type": "application/json; charset=UTF-8",
           },
         })
-          .then((res) => res.json())
-          .then((paymentData) => {
-            // setPaymentId(paymentData?.session.payment_intent?.id);
-            // if (paymentId) {
-            if (paymentData.error) {
-              if (paymentData.error.includes("No such checkout.session:")) {
-                setErrorMessage("Page URL is invalid");
-              } 
-              else {
-                setErrorMessage("Something went wrong. Please contact admin");
-              }
-            }
-            // If no error
-            else {
-              setCustomerName(paymentData?.session?.customer_details?.name);
-              setPaymentIntentId(paymentData?.session.payment_intent?.id);
-            }
-          });
+
+        const paymentData = await response.json();
+
+        // If paymentData contains error:
+        if (paymentData?.error) {
+          if (paymentData.error.includes("No such checkout.session:")) {
+            setErrorMessage("Page URL is invalid");
+          } 
+          setIsLoading(false);
+          setErrorMessage("Something went wrong. Please contact admin");
+        }
+
+        // If paymentData contains paymentIntentId (this indicates a valid checkout session)
+        if (paymentData?.session?.payment_intent?.id) {
+          // Navigate to the product/paymentIntentId
+          // In the /product/paymentIntentId, the paymentIntentId is once checked again.
+          
+          // Remove the pi_ from the paymentData?.session.payment_intent?.id
+          router.push(`/product/${paymentData?.session.payment_intent?.id.replace("pi_", "")}`);
+        }
+        
       } 
       catch (error: any) {
+        setIsLoading(false);
         console.error(error);
       }
     }
@@ -57,6 +61,7 @@ export default function page() {
     else {
       setErrorMessage("Session id is invalid !");
     }
+
   }
 
   useEffect(() => {
@@ -64,39 +69,23 @@ export default function page() {
   }, []);
 
   return (
-    <div className="ui-product-card text-center min-h-96">
-      <CircleCheck className="mt-1 text-green-600 mx-auto" size={30} />
-      <h1 className="text-xl font-medium text-black mt-3">Payment completed</h1>
+      <div className="ui-product-card text-center">
 
-      {errorMessage ? <p className="text-sm text-red-600 mt-5">{errorMessage} </p> : 
-      (
-        <>
-          {customerName ? (
-            <>
-              <p className="text-sm text-black mt-5 mb-10">
-                Thank you {customerName}, your purchase is all set !
-              </p>
+        {isLoading && (
+          <>
+            <span className="loading loading-spinner loading-lg mx-auto"></span>
+            <h1 className="text-xl font-medium text-black mt-3">Loading</h1>
+            <p className="text-sm text-black mt-5 mb-10">Please wait...</p>
+          </>
+        )}
 
-              <div className="bg-blue-100/75 text-sm text-left px-3 py-2 rounded-md flex">
-                <Info size={25} className="me-2"/>
-                The link below will give you access to the product. Please keep it safe.
-              </div>
-
-              <button
-                type="button"
-                className="mt-5 ui-button"
-                onClick={() => {
-                  router.push(`/product/${paymentIntentId}`);
-                }}
-              >
-                View product
-              </button>
-            </>
-          ) : (
-            <div className="skeleton h-52 rounded-md mt-5 mx-auto"></div>
-          )}
-        </>
-      )}
-    </div>
+        {errorMessage && (
+          <>
+            <CircleX className="mt-1 text-red-600 mx-auto" strokeWidth={1.35} size={45} />
+            <h1 className="text-xl font-medium text-black mt-3">An error occured</h1>
+            <p className="text-sm text-black mt-5 mb-10">{errorMessage}</p>
+          </>
+        )}
+      </div>
   );
 }
