@@ -1,6 +1,15 @@
+interface ProductData {
+  name: string;
+  price: number;
+  currency: string;
+  description: string;
+  labels: { text: string }[];
+  isTestMode: boolean;
+  textModeMessage?: string;
+}
 // Edit this file to customise product data
 
-export const productData = {
+export const productData: ProductData = {
   name: "🦄 Unicorn",
   price: 10,
   

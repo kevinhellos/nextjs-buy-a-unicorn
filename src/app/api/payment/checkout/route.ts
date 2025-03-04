@@ -7,7 +7,7 @@ const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 // POST route to create a checkout session
 export async function POST(request: Request) {
     try{
-        const session = await stripe.checkout.sessions.create({
+        const session: Stripe.Response<Stripe.Checkout.Session> = await stripe.checkout.sessions.create({
             line_items: [
                 {
                     price_data: {

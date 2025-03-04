@@ -26,18 +26,19 @@ export default function AlertBanner() {
   if (showAlertBanner) {
     return (
       <div className="bg-purple-100/85 text-black font-medium text-sm text-center py-2">
-        <p className="text-center font-normal">
-          This page url gives anyone access to your product.
+        <p className="text-center font-normal text-sm">
+          {"⚠️"}This page url gives anyone access to your product. <br />
+          Be careful of sharing.
         </p>
         <button 
           type="button"
           className="text-sm border border-black hover:opacity-85 active:opacity-65 text-black py-1 px-3 rounded-md bg-white w-fit mt-2.5"
           onClick={() => {
-              localStorage.setItem("alert_banner_status", "dismissed");
-              setShowAlertBanner(false);
+            localStorage.setItem("alert_banner_status", "dismissed");
+            setShowAlertBanner(false);
           }}
           >
-          Understand and close
+          Understand and do not show again.
         </button>
       </div>
     );

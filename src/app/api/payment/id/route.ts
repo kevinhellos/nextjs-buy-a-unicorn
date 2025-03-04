@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
 export async function POST(request: Request) {
@@ -13,6 +13,7 @@ export async function POST(request: Request) {
   
     try {
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
+      
       if (paymentIntent) {
         return NextResponse.json({ paymentIntent }, { status: 200 });
       } 
