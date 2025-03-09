@@ -13,7 +13,6 @@ export default function page() {
     setBuyButtonLoading(true);
     
     try {
-
       // Create a Stripe checkout session
       fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/checkout`, {
         method: "POST",
@@ -22,7 +21,7 @@ export default function page() {
         }
       })
       .then(res => res.json())
-      .then(data => {
+      .then((data) => {
         setBuyButtonLoading(false);
         window.location.href = data.url;
       });

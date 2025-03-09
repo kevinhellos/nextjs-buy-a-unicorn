@@ -34,9 +34,12 @@ export default function page() {
 
         // If paymentData contains error:
         if (paymentData?.error) {
+
+          // Handle errors
           if (paymentData.error.includes("No such checkout.session:")) {
             setErrorMessage("Page URL is invalid");
           } 
+          
           setIsLoading(false);
           setErrorMessage("Something went wrong. Please contact admin");
         }

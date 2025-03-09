@@ -1,7 +1,7 @@
 import { productData } from "@/productData";
 import { NextResponse } from "next/server";
-
 import Stripe from "stripe";
+
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
 // POST route to create a checkout session

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
 export async function POST(request: Request) {
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
       // If both session and line items are retrieved successfully
       return NextResponse.json({ session, lineItems }, { status: 200 });
     } 
-    catch (err: any) {
-      return NextResponse.json({ error: err.message || "Internal Server Error"}, { status: 500 });
+    catch (error: any) {
+      return NextResponse.json({ error: error.message || "Internal Server Error"}, { status: 500 });
     }
   }
